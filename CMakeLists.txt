@@ -18,12 +18,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake_modules/
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_INIT} -fPIC -Wall -pedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-g -O3")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lcrypto")
 
+set(Boost_NO_BOOST_CMAKE 1)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 add_definitions(-DBOOST_ALL_DYN_LINK)
+
+if (APPLE)
+    set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
+endif(APPLE)
 
 if(WIN32)
     set(WINSOCK2_LIBRARIES "ws2_32")
@@ -39,6 +45,11 @@ find_package(Boost REQUIRED COMPONENTS system log OPTIONAL_COMPONENTS unit_test_
 find_package(libusb-1.0 REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(OpenSSL REQUIRED)
+
+if (APPLE)
+    set(OPENSSL_INCLUDE_DIR /usr/local/opt/openssl/include)
+    set(OPENSSL_LIBRARIES /usr/local/opt/openssl/lib/libssl.dylib;/usr/local/opt/openssl/lib/libcrypto.dylib)
+endif(APPLE)
 
 set(AASDK_PROTO_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -71,6 +82,9 @@ target_link_libraries(aasdk
                         ${PROTOBUF_LIBRARIES}
                         ${OPENSSL_LIBRARIES}
                         ${WINSOCK2_LIBRARIES})
+
+install(TARGETS aasdk DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include/aasdk)
 
 if(AASDK_TEST)
     add_executable(aasdk_ut

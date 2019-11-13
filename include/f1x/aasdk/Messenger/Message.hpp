@@ -26,6 +26,7 @@
 #include <f1x/aasdk/Messenger/EncryptionType.hpp>
 #include <f1x/aasdk/Messenger/MessageType.hpp>
 #include <f1x/aasdk/Messenger/MessageId.hpp>
+#include <boost/asio/detail/noncopyable.hpp>
 
 namespace f1x
 {
@@ -34,7 +35,7 @@ namespace aasdk
 namespace messenger
 {
 
-class Message: boost::noncopyable
+class Message: boost::asio::noncopyable
 {
 public:
     typedef std::shared_ptr<Message> Pointer;
