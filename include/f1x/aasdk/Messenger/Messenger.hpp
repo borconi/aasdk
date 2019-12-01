@@ -49,6 +49,7 @@ private:
     void outStreamMessageHandler(ChannelSendQueue::iterator queueElement);
     void rejectReceivePromiseQueue(const error::Error& e);
     void rejectSendPromiseQueue(const error::Error& e);
+    void parseMessage(Message::Pointer message, ReceivePromise::Pointer promise);
 
     boost::asio::io_service::strand receiveStrand_;
     boost::asio::io_service::strand sendStrand_;

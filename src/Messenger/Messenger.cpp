@@ -19,6 +19,7 @@
 #include <boost/endian/conversion.hpp>
 #include <f1x/aasdk/Error/Error.hpp>
 #include <f1x/aasdk/Messenger/Messenger.hpp>
+#include <f1x/aasdk/Common/Log.hpp>
 
 namespace f1x
 {
@@ -41,7 +42,7 @@ void Messenger::enqueueReceive(ChannelId channelId, ReceivePromise::Pointer prom
     receiveStrand_.dispatch([this, self = this->shared_from_this(), channelId, promise = std::move(promise)]() mutable {
         if(!channelReceiveMessageQueue_.empty(channelId))
         {
-            promise->resolve(std::move(channelReceiveMessageQueue_.pop(channelId)));
+            this->parseMessage(channelReceiveMessageQueue_.pop(channelId), promise);
         }
         else
         {
@@ -76,7 +77,7 @@ void Messenger::inStreamMessageHandler(Message::Pointer message)
 
     if(channelReceivePromiseQueue_.isPending(channelId))
     {
-        channelReceivePromiseQueue_.pop(channelId)->resolve(std::move(message));
+        this->parseMessage(message, channelReceivePromiseQueue_.pop(channelId));
     }
     else
     {
@@ -90,6 +91,11 @@ void Messenger::inStreamMessageHandler(Message::Pointer message)
                              std::bind(&Messenger::rejectReceivePromiseQueue, this->shared_from_this(), std::placeholders::_1));
         messageInStream_->startReceive(std::move(inStreamPromise));
     }
+}
+
+void Messenger::parseMessage(Message::Pointer message, ReceivePromise::Pointer promise) {
+    AASDK_LOG(debug) << channelIdToString(message->getChannelId()) << " " << MessageId(message->getPayload());
+    promise->resolve(message);
 }
 
 void Messenger::doSend()

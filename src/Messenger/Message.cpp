@@ -17,6 +17,7 @@
 */
 
 #include <f1x/aasdk/Messenger/Message.hpp>
+#include <f1x/aasdk/Common/Log.hpp>
 
 namespace f1x
 {
@@ -83,6 +84,7 @@ void Message::insertPayload(const common::Data& payload)
 
 void Message::insertPayload(const google::protobuf::Message& message)
 {
+    AASDK_LOG(debug) << message.DebugString();
     auto offset = payload_.size();
     payload_.resize(payload_.size() + message.ByteSize());
 
