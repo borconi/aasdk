@@ -128,7 +128,9 @@ common::Data createData(const DataConstBuffer& buffer)
 
 std::string dump(const Data& data)
 {
-    return dump(DataConstBuffer(data));
+    std::string buffer;
+    boost::algorithm::hex(data, back_inserter(buffer));
+    return buffer;
 }
 
 std::string dump(const DataConstBuffer& buffer)

@@ -74,6 +74,9 @@ void Messenger::enqueueSend(Message::Pointer message, SendPromise::Pointer promi
 void Messenger::inStreamMessageHandler(Message::Pointer message)
 {
     auto channelId = message->getChannelId();
+    if (message->getChannelId() != ChannelId::VIDEO) {
+        //AASDK_LOG(debug) << channelIdToString(message->getChannelId()) << ": " << common::dump(message->getPayload());
+    }
 
     if(channelReceivePromiseQueue_.isPending(channelId))
     {
@@ -94,7 +97,9 @@ void Messenger::inStreamMessageHandler(Message::Pointer message)
 }
 
 void Messenger::parseMessage(Message::Pointer message, ReceivePromise::Pointer promise) {
-    AASDK_LOG(debug) << channelIdToString(message->getChannelId()) << " " << MessageId(message->getPayload());
+    if (message->getChannelId() != ChannelId::VIDEO) {
+        //AASDK_LOG(debug) << channelIdToString(message->getChannelId()) << " " << MessageId(message->getPayload());
+    }
     promise->resolve(message);
 }
 
