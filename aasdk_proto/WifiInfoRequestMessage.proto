@@ -22,4 +22,6 @@ package f1x.aasdk.proto.messages;
 
 message WifiInfoRequest
 {
+    required string ip_address = 1;
+    optional uint32 port = 2;
 } 

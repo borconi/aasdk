@@ -21,7 +21,7 @@ syntax = "proto2";
 package f1x.aasdk.proto.messages;
 
 message WifiInfoResponse {
-    required string ip_address = 1;
+    optional string ip_address = 1;
     optional uint32 port = 2;
     required Status status = 3;
 
