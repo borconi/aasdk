@@ -42,6 +42,7 @@ message ChannelDescriptor
     optional BluetoothChannel bluetooth_channel = 6;
     optional NavigationChannel navigation_channel = 8;
     optional MediaInfoChannel media_infoChannel = 9;
+    optional PhoneStatusService phone_status_service = 10;
     optional VendorExtensionChannel vendor_extension_channel = 12;
     optional WifiChannel wifi_channel=16;
 }
